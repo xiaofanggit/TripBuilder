@@ -1,41 +1,58 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img width="150"src="https://laravel.com/laravel.png"></a></p>
+## About the project
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
-</p>
+A RESTFUL API OAUth2 project using Laravel 5.3 passport to help clients building their trips.
 
-## About Laravel
+Function1: Alphabetical listing of real airports in the world
+-URL: http://tripbuilder.dev/api/v1/airports (GET): 
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable, creative experience to be truly fulfilling. Laravel attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as:
+List of flights for a trip (the trip table testing data was created by the file: from \TripBuilder\database\seeds\DatabaseSeeder.php)
+-URL: http://tripbuilder.dev\api\v1\lights?id={trip_id} (GET)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Adding flights to a trip
+-URL: http://tripbuilder.dev\api\v1\flights (POST) @param int $trip_id: id of a trip, @param int $start_airport: id of a source airport , @param ing $end_airport: id of a destination airport
 
-Laravel is accessible, yet powerful, providing tools needed for large, robust applications. A superb combination of simplicity, elegance, and innovation give you tools you need to build any application with which you are tasked.
+-URL: http://tripbuilder.dev\api\v1\flights (DELETE)
+-Removing flights from a trip 5. 
 
-## Learning Laravel
+## About the installation
 
-Laravel has the most extensive and thorough documentation and video tutorial library of any modern web application framework. The [Laravel documentation](https://laravel.com/docs) is thorough, complete, and makes it a breeze to get started learning the framework.
+-Make sure you have PHP >= 5.6.4 installed in your machine.
+-You could use XAMPP or HOMESTEAD as your running enviroment. For XAMPP, go to https://www.apachefriends.org/index.html diownload and install. For homestead, follow the instructure on https://laravel.com/docs/5.3/homestead to install.
+-If clone the code from gitHub, need to manurally install all missed components by using composer or npm. I would suggest you to download the attached TripBuilder.zip.bak file, rename to TripBuilder.zip, extract to your code places. it will work properly, otherwise follow the  https://laravel.com/docs/5.3/passport to install:
+-Make sure the folders storage and the bootstrap/cache have writeable permission.
 
-If you're not in the mood to read, [Laracasts](https://laracasts.com) contains over 900 video tutorials on a range of topics including Laravel, modern PHP, unit testing, JavaScript, and more. Boost the skill level of yourself and your entire team by digging into our comprehensive video library.
+## How to use the project
 
-## Contributing
+-If installed properly, when input url: http://tripbuilder.dev/ (this is a virtual domain set by myself, yours could be different),
+you will see the login page. Register or login. 
+-The link 'Create New Client' creates OAuth Clients if you are a third party to use this API, 'Create New Token' gets a Personal Access Tokens. After clicking 'Create New Client' button, a popup will ask the client's name and redirect URL. RedirectUrl is the url on client side to return the access token. For example, mine is: "http://tripbuilderclient.dev/callback"
+-Put the below code into your client site where to use the api:
+Route::get('/', function () {
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](http://laravel.com/docs/contributions).
+    $query = http_build_query([
+        'client_id' => '{client id}',
+        'redirect_uri' => 'http://tripbuilderclient.dev/callback', //change to your url
+        'response_type' => 'code',
+        'scope' => ''
+    ]);
 
-## Security Vulnerabilities
+    return redirect('http://tripbuilder.dev/oauth/authorize?'.$query);
+});
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell at taylor@laravel.com. All security vulnerabilities will be promptly addressed.
+Route::get('/callback', function (Illuminate\Http\Request $request) {
+    $http = new \GuzzleHttp\Client;
 
-## License
+    $response = $http->post('http://tripbuilder.dev/oauth/token', [
+        'form_params' => [
+            'client_id' => 'client id',
+            'client_secret' => 'X4yse2MGKxFd3gy2ORaQApehXjYCgTkxe7bBSaKE', //the secret token got when you create a client
+            'grant_type' => 'authorization_code',
+            'redirect_uri' => 'http://tripbuilderclient.dev/callback', //your url
+            'code' => $request->code,
+        ],
+    ]);
+    $token =  json_decode((string) $response->getBody(), true);
+    return $token;
+});
+ The abouve token will be the real token to access all API call
 
-The Laravel framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
-# TripBuilder
