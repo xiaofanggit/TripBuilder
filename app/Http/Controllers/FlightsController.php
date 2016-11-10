@@ -77,21 +77,21 @@ class FlightsController extends Controller
      * method: DELETE
      * @param int $id: flight id
      */
-    public function destroy($id)
+    public function delete(Request $request)
     {   
+        $result = false;
         $statusCode = config('constants.HTTP_OK');
         try
         {            
-            $result = \Response::json(Flight::findOrFail($id)->delete());
+            $result = \Response::json(Flight::findOrFail($request->input('id'))->delete());
         }
         catch (Exception $e)
         {
             $statusCode = config('constants.HTTP_BAD');
-            $result = false;
         }
         finally
-        {
-            return \Response::json($result, $statusCode);
+        {   
+            return \Response::json(array('result' => $result, 'status' => $statusCode));
         }
-    }
+    }    
 }
