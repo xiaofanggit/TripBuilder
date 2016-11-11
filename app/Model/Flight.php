@@ -71,7 +71,7 @@ class Flight extends Model
                     SELECT f.id, f.trip_id, a1.airport_name as start_name, a2.airport_name as end_name 
                     FROM flights f, airports a1, airports a2
                     where $condi f.start_airport = a1.id 
-                    and f.end_airport = a2.id order by f.trip_id") );
+                    and f.end_airport = a2.id order by f.trip_id, f.id") );
          
     }
 }
