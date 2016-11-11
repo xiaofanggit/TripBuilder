@@ -44,16 +44,16 @@ class Flight extends Model
         {           
             return ['result' => false, 'msg' => 'Failed! The start airport and end airport is the same', 'status' => 400];
         }
-        $flight = DB::table('flights')->where([['trip_id',  $data['trip_id']], ['start_airport', $data['start_airport'], ['end_airport', $data['end_airport']]]])->first();
-        if ($flight === null)
-        {
-           $result= DB::table('flights')->insert([
+        
+        $result = DB::table('flights')->insert([
                 ['trip_id' => $data['trip_id'], 'start_airport' => $data['start_airport'], 'end_airport' => $data['end_airport'], 'created_at' => date('Y-m-d h:m:s'), 'updated_at' => date('Y-m-d h:m:s')]
-            ]);
-           
-           return ['result' => $result, 'msg' => 'The flight inserted successfully.', 'status' => 200];
+        ]);
+        if ($result) 
+        {
+            return ['result' => $result, 'msg' => 'The flight inserted successfully.', 'status' => 200];
+        } else {
+            return ['result' => false, 'msg' => 'Failed! The flight already exsit.', 'status' => 400];
         }
-        return ['result' => false, 'msg' => 'Failed! The flight already exsit.', 'status' => 400];
     }
     /**
      * 
