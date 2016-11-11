@@ -12,18 +12,7 @@
 */
 
 Route::get('/', 'HomeController@index');
-/*Route::get('about', function () {
-    return view('pages.about');
-});
-Route::get('contact', function () {
-    return view('pages.contact');
-});*/
-Auth::routes();
 
-//Route::get('airportsList', 'AirportsController@airportsList');
-//Route::get('flights', 'FlightsController@getFlights');
-//Route::post('flights', 'FlightsController@addFlights');
-//Route::delete('flights', 'FlightsController@removeFlights');
-//Auth::routes();
+Auth::routes();
 
 Route::get('/home', 'HomeController@index');

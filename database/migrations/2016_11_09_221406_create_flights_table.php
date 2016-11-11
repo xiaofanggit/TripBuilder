@@ -18,6 +18,7 @@ class CreateFlightsTable extends Migration
             $table->integer('trip_id')->index()->unsigned();
             $table->integer('start_airport')->index()->unsigned();
             $table->integer('end_airport')->index()->unsigned();
+            $table->unique(array('trip_id', 'start_airport', 'end_airport'));
             $table->timestamps();
         });
         Schema::table('flights', function($table) {

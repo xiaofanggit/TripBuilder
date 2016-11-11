@@ -28,17 +28,17 @@ class FlightsController extends Controller
      */    
     public function index(Request $request)
     {  
-        $statusCode = config('constants.HTTP_OK');        
+        $status = config('constants.HTTP_OK');        
         try
         {            
             $flights = (new Flight)->findFlights($request->input('id'));
         }
         catch (Exception $e){
             $flights = [];        
-            $statusCode = config('constants.HTTP_BAD');
+            $status = config('constants.HTTP_BAD');
         }finally
         {
-            return \Response::json(array('flights' => $flights, 'status' => $statusCode));
+            return \Response::json(array('flights' => $flights, 'status' => $status));
         }
     }
     
@@ -55,24 +55,23 @@ class FlightsController extends Controller
      * @return insert result(ture or false) with status code(ok: 200 | bad: 400)
      */
     public function store(Request $request)
-    {
-        $statusCode = config('constants.HTTP_OK');
+    {   
+        $result = [];    
         try
         {            
-            $result = (new Flight)->addFlight($request->all()); 
+            $result = (new Flight)->addFlight($request->all());             
         }
         catch (Exception $e)
-        {
-            $statusCode = config('constants.HTTP_BAD');
-            $result = false;
+        {           
+            $result = ['result' => false, 'msg' => $e->getMessage(), 'status' => config('constants.HTTP_BAD')];
         }
         finally
-        {
-            return \Response::json(array('result' => $result, 'status' => $statusCode));
+        {   
+            return \Response::json($result);
         }
     }
     /**
-     * Remove a flight from a trip
+     * Delete a flight from a trip
      * url: /api/v1/flights
      * method: DELETE
      * @param int $id: flight id
@@ -80,18 +79,21 @@ class FlightsController extends Controller
     public function delete(Request $request)
     {   
         $result = false;
-        $statusCode = config('constants.HTTP_OK');
+        $status = config('constants.HTTP_OK');
+        $msg ="";
         try
         {            
-            $result = \Response::json(Flight::findOrFail($request->input('id'))->delete());
+            $result = \Response::json(Flight::findOrFail($request->input('id'))->delete());            
+            $msg = "The flight deleted successfully";
         }
         catch (Exception $e)
         {
-            $statusCode = config('constants.HTTP_BAD');
+            $status = config('constants.HTTP_BAD');
+            $msg = $e->getMessage();
         }
         finally
         {   
-            return \Response::json(array('result' => $result, 'status' => $statusCode));
+            return \Response::json(['result' => $result, 'status' => $status, 'msg' => $msg]);
         }
     }    
 }

@@ -41,17 +41,19 @@ class Flight extends Model
     public function addFlight($data)
     {   //Not allow start and the end are the same airport  
         if ($data['start_airport'] == $data['end_airport'])
-        {            
-            return false;
+        {           
+            return ['result' => false, 'msg' => 'Failed! The start airport and end airport is the same', 'status' => 400];
         }
         $flight = DB::table('flights')->where([['trip_id',  $data['trip_id']], ['start_airport', $data['start_airport'], ['end_airport', $data['end_airport']]]])->first();
         if ($flight === null)
         {
-           return DB::table('flights')->insert([
+           $result= DB::table('flights')->insert([
                 ['trip_id' => $data['trip_id'], 'start_airport' => $data['start_airport'], 'end_airport' => $data['end_airport'], 'created_at' => date('Y-m-d h:m:s'), 'updated_at' => date('Y-m-d h:m:s')]
             ]);
+           
+           return ['result' => $result, 'msg' => 'The flight inserted successfully.', 'status' => 200];
         }
-        return false;
+        return ['result' => false, 'msg' => 'Failed! The flight already exsit.', 'status' => 400];
     }
     /**
      * 
@@ -66,7 +68,7 @@ class Flight extends Model
         $condi = empty($id) ? '' : "f.trip_id = $id and";
         return $results = DB::select( 
                  DB::raw("
-                     SELECT f.trip_id, a1.airport_name as start_name, a2.airport_name as end_name 
+                    SELECT f.id, f.trip_id, a1.airport_name as start_name, a2.airport_name as end_name 
                     FROM flights f, airports a1, airports a2
                     where $condi f.start_airport = a1.id 
                     and f.end_airport = a2.id order by f.trip_id") );

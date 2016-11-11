@@ -4,7 +4,7 @@
     | Global constants
     |--------------------------------------------------------------------------
     |
-    | Users defined contants
+    | Users defined constants
     |
     */
 return [

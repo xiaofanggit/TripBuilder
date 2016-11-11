@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Model\Airport;
 use Illuminate\Http\Request;
 
+/**
+ * Airports controller
+ */
 class AirportsController extends Controller 
 {
     /**
@@ -28,14 +31,14 @@ class AirportsController extends Controller
     {  
         $statusCode = config('constants.HTTP_OK');
         try
-        {            
-            $airports = (new Airport())->findAirportsByInit($request->input('init'));
+        {   $init = empty($request->input('init')) ? 'A' : $request->input('init');     
+            $airports = (new Airport())->findAirportsByInit($init);
         }
         catch (Exception $e){
-            $airports = [];
+            $airports = [$e->getMessage()];
             $statusCode = config('constants.HTTP_BAD');
         }finally{
-            return \Response::json($airports, $statusCode);
+            return \Response::json(array('airports' => $airports, 'status' =>$statusCode));
         }
     }    
 }

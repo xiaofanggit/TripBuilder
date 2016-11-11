@@ -41,5 +41,35 @@ class DatabaseSeeder extends Seeder
             'created_at' => date('Y-m-d H:i:s'),
             'updated_at' => date('Y-m-d H:i:s'),
         ]);
+        DB::table('trips')->insert([
+            'source_city' => 'Bejing',
+            'destination_city' => 'Montreal',
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s'),
+        ]);
+        DB::table('trips')->insert([
+            'source_city' => 'Calgory',
+            'destination_city' => 'Montreal',
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s'),
+        ]);       
+        DB::table('trips')->insert([
+            'source_city' => 'Shanghai',
+            'destination_city' => 'Montreal',
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s'),
+        ]);
+        DB::table('trips')->insert([
+            'source_city' => 'Toronto',
+            'destination_city' => 'Montreal',
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s'),
+        ]);
+        DB::table('trips')->insert([
+            'source_city' => 'vancouver',
+            'destination_city' => 'Montreal',
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s'),
+        ]);
     }
-}
+    }

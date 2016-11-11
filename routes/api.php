@@ -16,8 +16,13 @@ use Illuminate\Http\Request;
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:api');
-Route::get('/v1/airports', 'AirportsController@index');
+
+/**
+ * API call route related with airports and flights.
+ * Since this is version1, add v1 as the prefix.
+ */
 Route::group(['prefix' => 'v1'], function () {
+    Route::get('airports', 'AirportsController@index');
     Route::resource('flights', 'flightsController', ['except' => ['destroy']]);
-    Route::delete('flight', 'FlightsController@delete');
+    Route::delete('flights', 'FlightsController@delete');
 });

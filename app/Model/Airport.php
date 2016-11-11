@@ -18,6 +18,6 @@ class Airport extends Model
      * @return array data
      */
     public function findAirportsByInit($init = 'A') {
-        return DB::table("Airports")->where('airport_name', 'LIKE', $init.'%')->orderBy('airport_name', 'asc')->get();
+        return DB::table("Airports")->where('airport_name', 'LIKE', $init.'%')->get();
     }
 }
