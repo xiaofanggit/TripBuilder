@@ -83,6 +83,7 @@ And you could find its installation file from read.md
 
 ## If your site cannot work properly, you could run the below two commands:
 php artisan key:generate
+
 php artisan config:clear
 
 
@@ -119,5 +120,6 @@ Route::get('/callback', function (Illuminate\Http\Request $request) {
     ]);
     return  json_decode((string) $response->getBody(), true);
 });
- The abouve token will be the real token to access all API call
+
+The token will be the access token to access your API provider.
 
